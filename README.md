@@ -2,12 +2,12 @@
 
 `StableBTreeMap` is a data structure that was developed for the bitcoin integration.
 
-It is a `BTreeMap` that has a similar interface to a standard `BTreeMap`, but the data
+It is a data structure that has a similar interface to a standard `BTreeMap`, but the data
 lives entirely in stable memory. This data structure allows canisters to have K/V stores
-that can be several gigabytes in size, without having to define `pre_upgrade`/`post_upgrade`
-hooks.
+that can grow to several gigabytes in size, without having to define `pre_upgrade`/`post_upgrade`
+hooks in the canister.
 
-While this data structure has been tested with tens of millions of keys, its use for
+While this data structure has been tested with tens of millions of keys, its use in
 canisters is still considered experimental.
 
 This repo contains two examples:
