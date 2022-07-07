@@ -1,22 +1,15 @@
 {
+  "dfx": "0.10.1",
   "canisters": {
-    "btreemap_demo": {
-      "candid": "src/btreemap_demo/btreemap_demo.did",
-      "package": "btreemap_demo",
+    "basic_example": {
+      "candid": "src/basic_example/candid.did",
+      "package": "basic_example",
       "type": "rust"
     },
-    "btreemap_demo_assets": {
-      "dependencies": [
-        "btreemap_demo"
-      ],
-      "frontend": {
-        "entrypoint": "src/btreemap_demo_assets/src/index.html"
-      },
-      "source": [
-        "src/btreemap_demo_assets/assets",
-        "dist/btreemap_demo_assets/"
-      ],
-      "type": "assets"
+    "custom_types_example": {
+      "candid": "src/custom_types_example/candid.did",
+      "package": "custom_types_example",
+      "type": "rust"
     }
   },
   "defaults": {
@@ -25,7 +18,6 @@
       "packtool": ""
     }
   },
-  "dfx": "0.9.3",
   "networks": {
     "local": {
       "bind": "127.0.0.1:8000",

@@ -1,37 +1,69 @@
-# btreemap_demo
+# `StableBTreeMap` in Canisters
 
-Welcome to your new btreemap_demo project and to the internet computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
+`StableBTreeMap` is a data structure that was developed for the bitcoin integration.
 
-To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
+It is a `BTreeMap` that has a similar interface to a standard `BTreeMap`, but the data
+lives entirely in stable memory. This data structure allows canisters to have K/V stores
+that can be several gigabytes in size, without having to define `pre_upgrade`/`post_upgrade`
+hooks.
 
-To learn more before you start working with btreemap_demo, see the following documentation available online:
+While this data structure has been tested with tens of millions of keys, its use for
+canisters is still considered experimental.
 
-- [Quick Start](https://smartcontracts.org/docs/quickstart/quickstart-intro.html)
-- [SDK Developer Tools](https://smartcontracts.org/docs/developers-guide/sdk-guide.html)
-- [Rust Canister Devlopment Guide](https://smartcontracts.org/docs/rust-guide/rust-intro.html)
-- [ic-cdk](https://docs.rs/ic-cdk)
-- [ic-cdk-macros](https://docs.rs/ic-cdk-macros)
-- [Candid Introduction](https://smartcontracts.org/docs/candid-guide/candid-intro.html)
-- [JavaScript API Reference](https://erxue-5aaaa-aaaab-qaagq-cai.raw.ic0.app)
+This repo contains two examples:
 
-If you want to start working on your project right away, you might want to try the following commands:
+## Basic Example
 
-```bash
-cd btreemap_demo/
-dfx help
-dfx config --help
-```
-
-## Running the project locally
-
-If you want to test your project locally, you can use the following commands:
+This example showcases how to initialize a `StableBTreeMap` that holds primitive types.
 
 ```bash
-# Starts the replica, running in the background
+# Start the replica, running in the background
 dfx start --background
 
-# Deploys your canisters to the replica and generates your candid interface
+# Deploys the examples.
 dfx deploy
+
+# Insert some data into the basic_example canister.
+dfx canister call basic_example insert '("alice", blob "12341234")'
+dfx canister call basic_example insert '("bob", blob "789789789")'
+
+# Upgrade the canister, which clears all the data in the heap.
+dfx deploy --upgrade-unchanged basic_example
+
+# Even though the canister has been upgraded and its heap is cleared,
+# querying the canister should still return the data stored prior to
+# the upgrade.
+dfx canister call basic_example get '("alice")'
+> (opt blob "12341234") 
+
+dfx canister call basic_example get '("bob")'
+> (opt blob "789789789")
 ```
 
-Once the job completes, your application will be available at `http://localhost:8000?canisterId={asset_canister_id}`.
+# Custom Types Example
+
+`StableBTreeMap` supports generics, and you can use it to store your own `struct`s.
+This example showcases how you can define a struct and be able to store it in a
+`StableBTreeMap`.
+
+We define a `UserProfile` struct in this example that stores a user's name and age.
+
+Example usage:
+
+```bash
+# Insert some data into the basic_example canister.
+dfx canister call custom_types_example insert '(1, record { age = 32; name = "Some Name"})'
+dfx canister call custom_types_example insert '(2, record { age = 48; name = "Other Name"})'
+
+# Upgrade the canister, which clears all the data in the heap.
+dfx deploy --upgrade-unchanged custom_types_example
+
+# Even though the canister has been upgraded and its heap is cleared,
+# querying the canister should still return the data stored prior to
+# the upgrade.
+$ dfx canister call custom_types_example get '(1)'
+> (opt record { age = 32 : nat8; name = "Some Name" })
+
+dfx canister call custom_types_example get '(2)'
+> (opt record { age = 48 : nat8; name = "Other Name" })
+```

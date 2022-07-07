@@ -1,4 +1,5 @@
 [workspace]
 members = [
-    "src/btreemap_demo",
+    "src/basic_example",
+    "src/custom_types_example",
 ]
