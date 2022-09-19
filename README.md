@@ -1,3 +1,5 @@
+# UPDATE: The examples have been migrated to https://github.com/dfinity/stable-structures and this repo is now archived.
+
 # `StableBTreeMap` in Canisters
 
 `StableBTreeMap` is a data structure that was developed for the bitcoin integration.
